@@ -1,0 +1,7 @@
+# Лабораторная работа №2
+
+Создаtncz класс для работы с одномерными массивами: перегрузить оператор & для пересечения массивов.
+Память под массивы отводитcz динамически. Предоставkztncz конструктор копирования. Определztncz friend функции для операций ввода-вывода в поток.
+
+ Ссылка на SonarCloud:  
+[https://sonarcloud.io/summary/overall?id=Volkovich81_nika2&branch=master](https://sonarcloud.io/summary/overall?id=Volkovich81_nika2&branch=master)
