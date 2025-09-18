@@ -1,0 +1,23 @@
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build
+*.exe
+*.obj
+*.o
+*.dll
+*.lib
+*.pdb
+*.ilk
+*.log
+
+# Sonar
+bw-output/
+build-wrapper-linux-x86.zip
+
+# OS
+.DS_Store
+Thumbs.db
