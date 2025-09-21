@@ -2,37 +2,33 @@
 
 Array::Array() : data(nullptr), size(0) {}
 
-Array::Array(size_t n) : size(n) {
+Array::Array(int n) : data(nullptr), size(n) {
     if (n > 0)
         data = new int[n](); 
-    else
-        data = nullptr;
 }
 
-Array::Array(const Array& other) : size(other.size) {
+Array::Array(const Array& other) : data(nullptr), size(other.size) {
     if (size > 0) {
         data = new int[size];
-        for (size_t i = 0; i < size; ++i)
+        for (int i = 0; i < size; ++i)
             data[i] = other.data[i];
     }
-    else {
-        data = nullptr;
-    }
+}
+
+void Array::swap(Array& other) noexcept {
+    int* tmpData = data;
+    data = other.data;
+    other.data = tmpData;
+
+    int tmpSize = size;
+    size = other.size;
+    other.size = tmpSize;
 }
 
 Array& Array::operator=(const Array& other) {
-    if (this != &other) {
-        delete[] data;
-        size = other.size;
-        if (size > 0) {
-            data = new int[size];
-            for (size_t i = 0; i < size; ++i)
-                data[i] = other.data[i];
-        }
-        else {
-            data = nullptr;
-        }
-    }
+    if (this == &other) return *this;
+    Array tmp(other);   
+    swap(tmp);          
     return *this;
 }
 
@@ -40,31 +36,31 @@ Array::~Array() {
     delete[] data;
 }
 
-size_t Array::getSize() const {
+
+int Array::getSize() const {
     return size;
 }
 
-int Array::get(size_t index) const {
-    if (index >= size)
+int Array::get(int index) const {
+    if (index >= size || data == nullptr)
         return 0; 
     return data[index];
 }
 
-void Array::set(size_t index, int value) {
-    if (index < size)
+void Array::set(int index, int value) {
+    if (index < size && data != nullptr)
         data[index] = value;
 }
 
-void Array::resize(size_t newSize) {
-    if (newSize == size)
-        return;
+
+void Array::resize(int newSize) {
+    if (newSize == size) return;
 
     int* newData = nullptr;
     if (newSize > 0) {
         newData = new int[newSize]();
-        size_t minSize = (newSize < size) ? newSize : size;
-
-        for (size_t i = 0; i < minSize; ++i)
+        int minSize = (newSize < size) ? newSize : size;
+        for (int i = 0; i < minSize; ++i)
             newData[i] = data[i];
     }
 
@@ -73,20 +69,21 @@ void Array::resize(size_t newSize) {
     size = newSize;
 }
 
+
 Array Array::intersect(const Array& other) const {
     Array result;
     if (size == 0 || other.size == 0)
         return result;
 
-    size_t maxSize = (size < other.size) ? size : other.size;
+    int maxSize = (size < other.size) ? size : other.size;
     result.resize(maxSize);
 
-    size_t idx = 0;
-    for (size_t i = 0; i < size; ++i) {
+    int idx = 0;
+    for (int i = 0; i < size; ++i) {
         int elem = data[i];
         bool foundInOther = false;
 
-        for (size_t j = 0; j < other.size; ++j) {
+        for (int j = 0; j < other.size; ++j) {
             if (other.data[j] == elem) {
                 foundInOther = true;
                 break;
@@ -95,7 +92,7 @@ Array Array::intersect(const Array& other) const {
 
         if (foundInOther) {
             bool alreadyInResult = false;
-            for (size_t k = 0; k < idx; ++k) {
+            for (int k = 0; k < idx; ++k) {
                 if (result.data[k] == elem) {
                     alreadyInResult = true;
                     break;
@@ -110,4 +107,28 @@ Array Array::intersect(const Array& other) const {
 
     result.resize(idx);
     return result;
+}
+
+Array Array::operator&(const Array& other) const {
+    return intersect(other);
+}
+
+
+std::istream& operator>>(std::istream& is, Array& arr) {
+    int n;
+    if (!(is >> n)) return is;
+    arr.resize(n);
+    for (int i = 0; i < n; ++i)
+        is >> arr.data[i];
+    return is;
+}
+
+std::ostream& operator<<(std::ostream& os, const Array& arr) {
+    os << "[";
+    for (int i = 0; i < arr.size; ++i) {
+        os << arr.data[i];
+        if (i + 1 < arr.size) os << ", ";
+    }
+    os << "]";
+    return os;
 }

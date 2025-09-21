@@ -1,8 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include <cctype>
-#include <locale>
-#include <clocale> 
+#include <clocale>
 
 #include "Array.h"
 
@@ -17,7 +16,7 @@ bool isPositiveInteger(const std::string& s) {
 
 void inputArray(Array& arr) {
     std::string line;
-    size_t n = 0;
+    int n = 0;
 
     while (true) {
         std::cout << "Введите размер массива (>0): ";
@@ -45,32 +44,32 @@ void inputArray(Array& arr) {
 
     arr.resize(n);
 
-    for (size_t i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         while (true) {
             std::cout << "Элемент [" << i << "] = ";
             std::getline(std::cin, line);
 
             bool negative = false;
-            size_t pos = 0;
-            if (!line.empty() && line[0] == '-') {
-                negative = true;
+            int pos = 0;
+            if (!line.empty() && (line[0] == '-' || line[0] == '+')) {
+                negative = (line[0] == '-');
                 pos = 1;
             }
-            bool isNumber = true;
-            for (; pos < line.size(); ++pos) {
+            bool isNumber = pos < static_cast<int>(line.size());
+            for (; pos < static_cast<int>(line.size()); ++pos) {
                 if (!std::isdigit(static_cast<unsigned char>(line[pos]))) {
                     isNumber = false;
                     break;
                 }
             }
-            if (!isNumber || line.empty() || line == "-" || line == "+") {
+            if (!isNumber) {
                 std::cout << "Ошибка: введите целое число.\n";
                 continue;
             }
 
             int val = 0;
             pos = (negative) ? 1 : 0;
-            for (; pos < line.size(); ++pos) {
+            for (; pos < static_cast<int>(line.size()); ++pos) {
                 val = val * 10 + (line[pos] - '0');
             }
             val = negative ? -val : val;
@@ -82,18 +81,12 @@ void inputArray(Array& arr) {
 }
 
 void printArray(const Array& arr) {
-    std::cout << "[";
-    for (size_t i = 0; i < arr.getSize(); ++i) {
-        std::cout << arr.get(i);
-        if (i + 1 < arr.getSize())
-            std::cout << ", ";
-    }
-    std::cout << "]";
+    std::cout << arr << "\n";
 }
 
 int main() {
     std::setlocale(LC_ALL, "Russian");
-    
+
     Array a, b, c;
 
     while (true) {
@@ -108,7 +101,7 @@ int main() {
         std::string choiceLine;
         std::getline(std::cin, choiceLine);
 
-        if (!isPositiveInteger(choiceLine) || choiceLine.length() > 1) {
+        if (choiceLine.empty() || choiceLine.size() > 1 || !std::isdigit(static_cast<unsigned char>(choiceLine[0]))) {
             std::cout << "Ошибка: введите число от 1 до 5.\n";
             continue;
         }
@@ -126,20 +119,17 @@ int main() {
             if (a.getSize() == 0 || b.getSize() == 0)
                 std::cout << "Массивы не заполнены.\n";
             else {
-                c = a.intersect(b);
-                std::cout << "Пересечение: ";
-                printArray(c);
-                std::cout << "\n";
+                c = a & b;
+                std::cout << "Пересечение: " << c << "\n";
             }
             break;
         case 4:
             std::cout << "Первый массив: ";
             printArray(a);
-            std::cout << "\nВторой массив: ";
+            std::cout << "Второй массив: ";
             printArray(b);
-            std::cout << "\nПересечение: ";
+            std::cout << "Пересечение: ";
             printArray(c);
-            std::cout << "\n";
             break;
         case 5:
             return 0;
