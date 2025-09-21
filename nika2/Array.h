@@ -29,4 +29,4 @@ public:
     void swap(Array& other) noexcept;
 };
 
-#endif 
+#endif

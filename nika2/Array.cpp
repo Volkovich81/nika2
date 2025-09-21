@@ -36,7 +36,6 @@ Array::~Array() {
     delete[] data;
 }
 
-
 int Array::getSize() const {
     return size;
 }
@@ -51,7 +50,6 @@ void Array::set(int index, int value) {
     if (index < size && data != nullptr)
         data[index] = value;
 }
-
 
 void Array::resize(int newSize) {
     if (newSize == size) return;
@@ -90,18 +88,18 @@ Array Array::intersect(const Array& other) const {
             }
         }
 
-        if (foundInOther) {
-            bool alreadyInResult = false;
-            for (int k = 0; k < idx; ++k) {
-                if (result.data[k] == elem) {
-                    alreadyInResult = true;
-                    break;
-                }
-            }
+        if (!foundInOther) continue;
 
-            if (!alreadyInResult) {
-                result.data[idx++] = elem;
+        bool alreadyInResult = false;
+        for (int k = 0; k < idx; ++k) {
+            if (result.data[k] == elem) {
+                alreadyInResult = true;
+                break;
             }
+        }
+
+        if (!alreadyInResult) {
+            result.data[idx++] = elem;
         }
     }
 

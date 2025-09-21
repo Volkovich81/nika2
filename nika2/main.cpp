@@ -14,6 +14,33 @@ bool isPositiveInteger(const std::string& s) {
     return true;
 }
 
+bool isIntegerString(const std::string& s) {
+    if (s.empty()) return false;
+    int start = 0;
+    if (s[0] == '+' || s[0] == '-') {
+        if (s.size() == 1) return false;
+        start = 1;
+    }
+    for (int i = start; i < static_cast<int>(s.size()); ++i) {
+        if (!std::isdigit(static_cast<unsigned char>(s[i])))
+            return false;
+    }
+    return true;
+}
+
+int parseInt(const std::string& s) {
+    int sign = 1;
+    int i = 0;
+    if (s[0] == '+' || s[0] == '-') {
+        if (s[0] == '-') sign = -1;
+        i = 1;
+    }
+    int value = 0;
+    for (; i < static_cast<int>(s.size()); ++i)
+        value = value * 10 + (s[i] - '0');
+    return sign * value;
+}
+
 void inputArray(Array& arr) {
     std::string line;
     int n = 0;
@@ -28,14 +55,9 @@ void inputArray(Array& arr) {
         }
 
         n = 0;
-        for (char ch : line) {
-            n = n * 10 + (ch - '0');
-            if (n == 0) {
-                break;
-            }
-        }
+        for (char ch : line) n = n * 10 + (ch - '0');
 
-        if (n == 0) {
+        if (n <= 0) {
             std::cout << "Ошибка: число должно быть больше 0.\n";
             continue;
         }
@@ -48,32 +70,11 @@ void inputArray(Array& arr) {
         while (true) {
             std::cout << "Элемент [" << i << "] = ";
             std::getline(std::cin, line);
-
-            bool negative = false;
-            int pos = 0;
-            if (!line.empty() && (line[0] == '-' || line[0] == '+')) {
-                negative = (line[0] == '-');
-                pos = 1;
-            }
-            bool isNumber = pos < static_cast<int>(line.size());
-            for (; pos < static_cast<int>(line.size()); ++pos) {
-                if (!std::isdigit(static_cast<unsigned char>(line[pos]))) {
-                    isNumber = false;
-                    break;
-                }
-            }
-            if (!isNumber) {
+            if (!isIntegerString(line)) {
                 std::cout << "Ошибка: введите целое число.\n";
                 continue;
             }
-
-            int val = 0;
-            pos = (negative) ? 1 : 0;
-            for (; pos < static_cast<int>(line.size()); ++pos) {
-                val = val * 10 + (line[pos] - '0');
-            }
-            val = negative ? -val : val;
-
+            int val = parseInt(line);
             arr.set(i, val);
             break;
         }
