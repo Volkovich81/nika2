@@ -23,8 +23,25 @@ public:
     Array intersect(const Array& other) const;
     Array operator&(const Array& other) const;
 
-    friend std::istream& operator>>(std::istream& is, Array& arr);
-    friend std::ostream& operator<<(std::ostream& os, const Array& arr);
+private:
+    friend std::istream& operator>>(std::istream& is, Array& arr) {
+        int n;
+        if (!(is >> n)) return is;
+        arr.resize(n);
+        for (int i = 0; i < n; ++i)
+            is >> arr.data[i];
+        return is;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Array& arr) {
+        os << "[";
+        for (int i = 0; i < arr.size; ++i) {
+            os << arr.data[i];
+            if (i + 1 < arr.size) os << ", ";
+        }
+        os << "]";
+        return os;
+    }
 
     void swap(Array& other) noexcept;
 };
