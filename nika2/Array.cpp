@@ -1,13 +1,15 @@
 #include "Array.h"
 
-Array::Array() : size(0) {}
+Array::Array() : {}
 
-Array::Array(int n) : size(n) {
+Array::Array(int n) : {
+    size = n;
     if (n > 0)
         data = new int[n](); 
 }
 
-Array::Array(const Array& other) : size(other.size) {
+Array::Array(const Array& other) : {
+    size = other.size;
     if (size > 0) {
         data = new int[size];
         for (int i = 0; i < size; ++i)

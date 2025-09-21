@@ -23,7 +23,7 @@ public:
     Array intersect(const Array& other) const;
     Array operator&(const Array& other) const;
 
-private:
+   private:
     friend std::istream& operator>>(std::istream& is, Array& arr) {
         int n;
         if (!(is >> n)) return is;
