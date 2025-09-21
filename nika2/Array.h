@@ -5,8 +5,8 @@
 
 class Array {
 private:
-    int* data;
-    int size;
+    int* data = nullptr;
+    int size = 0;
 
 public:
     Array();
